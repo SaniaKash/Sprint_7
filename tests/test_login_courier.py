@@ -13,14 +13,7 @@ class TestLoginCourier:
         courier.create_new_courier(Data.courier_login_password)
         response = courier.login_courier(Data.courier_login_password)
         assert response.status_code == 200
-        assert response.json()['id']
-
-    @allure.title('Проверка возвращении ошибки при авторизации несуществующего пользователем')
-    def test_post_login_courier_wrong_login_or_password_failed(self):
-        courier = Courier()
-        response = courier.login_courier(Data.courier_login_password)
-        assert response.status_code == 404
-        assert response.json()["message"] == "Учетная запись не найдена"
+        assert isinstance(response.json()['id'], int)
 
 
     @allure.title('Проверка возвращении ошибки на неверный логин или пароль при авторизации')
@@ -30,7 +23,7 @@ class TestLoginCourier:
         courier.create_new_courier(Data.courier_login_password)
         response = courier.login_courier(data)
         assert response.status_code == 404
-        assert response.json()["message"] == "Учетная запись не найдена"
+        assert response.json()["message"] == Data.login_courier_wrong_login_or_password_message
 
 
 
@@ -41,4 +34,11 @@ class TestLoginCourier:
         courier.create_new_courier(Data.courier_login_password)
         response = courier.login_courier(data)
         assert response.status_code == 400
-        assert response.json()["message"] == "Недостаточно данных для входа"
+        assert response.json()["message"] == Data.login_courier_without_login_or_password_field_message
+
+    @allure.title('Проверка возвращении ошибки при авторизации несуществующего пользователем')
+    def test_post_login_courier_no_exist_failed(self):
+        courier = Courier()
+        response = courier.login_courier(Data.courier_not_exist)
+        assert response.status_code == 404
+        assert response.json()["message"] == Data.login_courier_no_exist_message

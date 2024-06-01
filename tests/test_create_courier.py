@@ -11,15 +11,17 @@ class TestCreateCourier:
     def test_post_create_courier_success(self):
         courier = Courier()
         response = courier.create_new_courier(Data.courier_login_password)
-        assert response.status_code == 200
-        assert response.text == '{"ok":true}'
+        assert response.status_code == 201
+        assert response.text == Data.create_courier_success_message
 
     @allure.title('Проверка возвращении ошибки при создание одинаковых курьеров ')
     def test_post_create_2_same_courier_failed(self):
         courier = Courier()
         create_courier_1 = courier.create_new_courier(Data.courier_login_password)
         create_courier_2 = courier.create_new_courier(Data.courier_login_password)
-        assert create_courier_2.status_code == 409
+        response = create_courier_2
+        assert response.status_code == 409
+        assert response.json()["message"] == Data.create_courier_same_login_message
 
     @allure.title('Проверка возвращении ошибки при создании курьера с одинаковым логином')
     def test_post_create_2_same_login_courier_failed(self):
@@ -27,6 +29,7 @@ class TestCreateCourier:
         courier.create_new_courier(Data.courier_same_login_password_1)
         create_courier_same_login = courier.create_new_courier(Data.courier_same_login_password_2)
         assert create_courier_same_login.status_code == 409
+        assert create_courier_same_login.json()["message"] == Data.create_courier_same_login_message
 
     @allure.title('Проверка возвращении ошибки при отсутствии поля логина или пароля при создании курьера')
     @pytest.mark.parametrize('data', (Data.courier_without_login, Data.courier_without_password, Data.courier_without_login_password))
@@ -34,5 +37,5 @@ class TestCreateCourier:
         courier = Courier()
         response = courier.create_new_courier(data)
         assert response.status_code == 400
-        assert response.json()["message"] == "Недостаточно данных для создания учетной записи"
+        assert response.json()["message"] == Data.create_courier_without_login_or_password
 

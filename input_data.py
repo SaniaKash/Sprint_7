@@ -5,9 +5,13 @@ from faker import Faker
 fake = Faker()
 class Data:
 
-    url_create_courier = 'https://qa-scooter.praktikum-services.ru/api/v1/courier'
-    url_login_courier = 'https://qa-scooter.praktikum-services.ru/api/v1/courier/login'
-    url_delete_courier = 'https://qa-scooter.praktikum-services.ru/api/v1/courier/'
+    main_url = 'https://qa-scooter.praktikum-services.ru'
+    create_courier_success_message = '{"ok":true}'
+    create_courier_same_login_message = "Этот логин уже используется"
+    create_courier_without_login_or_password = "Недостаточно данных для создания учетной записи"
+    login_courier_no_exist_message = "Учетная запись не найдена"
+    login_courier_wrong_login_or_password_message = "Учетная запись не найдена"
+    login_courier_without_login_or_password_field_message = "Недостаточно данных для входа"
     courier_login_password = {
             "login": f'{login()}',
             "password": f'{password()}',
@@ -42,11 +46,15 @@ class Data:
             "password": f'{password()}123',
             "firstName": "firstName"
             }
+    courier_not_exist = {
+            "login": f'{login()}',
+            "password": f'{password()}123'
+            }
     courier_without_login_password = {}
 
+
 class OrderData:
-    url_create_order = 'https://qa-scooter.praktikum-services.ru/api/v1/orders'
-    url_get_order_list = 'https://qa-scooter.praktikum-services.ru/api/v1/orders'
+
     order_black = {
         "firstName": "Narutasadddasdasdo",
         "lastName": "Uchasdaaasdasdfffiha",
